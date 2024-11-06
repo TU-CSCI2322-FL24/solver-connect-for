@@ -5,4 +5,6 @@ solver-connect-for created by GitHub Classroom
  * Erik Cameron Rankin
 
  * data Player | Red | Yellow deriving (Show, Ord, Eq)
- * data Board | 
+ * data Board |
+ * row ((1-7), row)
+ * collumn (colNum, (number of tokens in the collum)) 
