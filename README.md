@@ -4,5 +4,5 @@ solver-connect-for created by GitHub Classroom
  * Joss Akinkunmi
  * Erik Cameron Rankin
 
-data Player | Red | Yellow deriving (Show, Ord, Eq)
-data Board | 
+ * data Player | Red | Yellow deriving (Show, Ord, Eq)
+ * data Board | 
