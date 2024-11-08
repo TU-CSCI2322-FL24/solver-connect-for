@@ -9,4 +9,5 @@ data Game = Board | CurrentPlayer Player | Status GameStatus deriving (Show, Eq,
 type Column = [Piece]
 
 type Board = [Column]
-type Point = (Integer, Integer)
+
+type Point = (Int, Int)
