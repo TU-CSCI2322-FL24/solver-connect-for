@@ -6,7 +6,7 @@ type Row = [Cell]
 
 type Board = [Row]
 
-data GameState = Board | Player | Maybe Move deriving (Show, Eq)
+data GameState = GameState Board  Player (Maybe Move) deriving (Show, Eq)
 
 type Move = Int
 
