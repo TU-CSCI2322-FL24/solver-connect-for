@@ -1,13 +1,31 @@
-data Piece = Empty | Player1 | Player2 deriving (Show, Ord, Eq)
+data Player = Red | Yellow deriving (Eq, Ord, Show)
 
-data Player = Player1 | Player2 deriving (Show, Eq, Ord)
+type Cell = Maybe Player  
 
-data GameStatus = Going | Draw | Winner Player deriving (Show, Eq, Ord)
+type Row = [Cell]
 
-data Game = Board | CurrentPlayer Player | Status GameStatus deriving (Show, Eq, Ord)
+type Board = [Row]
 
-type Column = [Piece]
+data GameState = Board | Player | Maybe Move deriving (Show, Eq)
 
-type Board = [Column]
+type Move = Int
 
-type Point = (Int, Int)
+data Outcome = Ongoing | Draw | Winner Player deriving (Eq, Show)
+
+type Winner = Player
+
+-- Takes the gamestate and the most recent move and checks if that player has won the game.
+checkWin :: GameState -> Move -> Outcome
+checkWin = undefined
+
+-- Takes the gamestate, Player and the move and adds it to the board.
+makeMove:: GameState -> Move -> Board
+makeMove = undefined 
+
+-- Tell you all the moves that can be made from the current gamestate, [0..6].
+legalMoves :: GameState -> [Move]
+legalMoves = undefined
+
+-- Print the game state, should be in 2d list form. can represent players with X's and O's.
+printGame :: GameState -> String 
+printGame = undefined 
