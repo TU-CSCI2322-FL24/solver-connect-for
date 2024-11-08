@@ -10,4 +10,4 @@ type Column = [Piece]
 
 type Board = [Column]
 
-type Point = (Char, Int)
+type Point = (Int, Int)
