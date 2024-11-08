@@ -11,5 +11,9 @@ solver-connect-for created by GitHub Classroom
  * type Column = [Piece]
  * type Board = [Column]
  * type Point = (Int, Int)
+ * -- Competitions --
+ * type Cell = Maybe Player
+ * data Player = Red | Yellow deriving (Show, Ord, Eq)
+ * type Board = [[Cell]]
  * row ((1-7), row)
  * collumn (colNum, (number of tokens in the collum)) 
