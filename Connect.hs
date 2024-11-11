@@ -6,13 +6,11 @@ type Row = [Cell]
 
 type Board = [Row]
 
-data GameState = GameState Board  Player (Maybe Move) deriving (Show, Eq)
+type GameState = (Board, Player)
 
 type Move = Int
 
 data Outcome = Ongoing | Draw | Winner Player deriving (Eq, Show)
-
-type Winner = Player
 
 -- Takes the gamestate and the most recent move and checks if that player has won the game.
 checkWin :: GameState -> Move -> Outcome
