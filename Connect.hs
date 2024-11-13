@@ -53,12 +53,12 @@ checkHorizontal (xs:xss, player)
     | otherwise = checkHorizontal (xss, player) 
 
 -- Function to check if there are 4 consecutive pieces in the row for the player
--- grabs the column and checks if there are 4 consecutive player.
 checkVertical :: GameState -> Bool
 checkVertical (board, player) = any (checkRowForWin player) rotatedBoard
   where
     rotatedBoard = transpose board
 
+-- reversing the board will get anti diagonals.
 checkDiagonal :: GameState -> Bool 
 checkDiagonal (board, player) = any (checkRowForWin player) (convertDiagsToRows board) || 
                                 any (checkRowForWin player) (convertDiagsToRows (map reverse board))
@@ -93,9 +93,15 @@ updateColumn (y:ys) player = y : updateColumn ys player
 
 
 -- Tell you all the moves that can be made from the current gamestate, [0..6].
-legalMoves :: GameState -> [Move]
-legalMoves = undefined
+legalMoves :: Board -> [Move]
+legalMoves (xs:_) = 
+  let aux [] _ = []
+      aux (x:xs) col 
+        | isNothing x = col : aux xs (col + 1)
+        | otherwise = aux xs (col + 1)
+    in aux xs 0 
+
 
 -- Print the game state, should be in 2d list form. can represent players with X's and O's.
-printGame :: GameState -> String 
+printGame :: Board -> String 
 printGame = undefined 
