@@ -52,7 +52,6 @@ checkHorizontal (xs:xss, player)
     | checkRowForWin player xs = True
     | otherwise = checkHorizontal (xss, player) 
 
--- Function to check if there are 4 consecutive pieces in the row for the player
 checkVertical :: GameState -> Bool
 checkVertical (board, player) = any (checkRowForWin player) rotatedBoard
   where
