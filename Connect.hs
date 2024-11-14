@@ -98,7 +98,7 @@ legalMoves (xs:_) =
       aux (x:xs) col 
         | isNothing x = col : aux xs (col + 1)
         | otherwise = aux xs (col + 1)
-    in aux xs 0 
+  in aux xs 0 
 
 
 -- Print the game state, should be in 2d list form. can represent players with X's and O's.
