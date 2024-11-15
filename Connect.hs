@@ -65,6 +65,7 @@ checkDiagonal :: GameState -> Bool
 checkDiagonal (board, player) = any (checkRowForWin player) (convertDiagsToRows board) || 
                                 any (checkRowForWin player) (convertDiagsToRows (map reverse board))
 
+-- Very inefficient as it finds all possible diagnols, but good for now.
 convertDiagsToRows :: Board -> [Row]
 convertDiagsToRows board = [convertDiagToRow (drop row board) col | row <- [0..length board - 1], col <- [0..(length (head board) - 1)]]
 
@@ -92,21 +93,17 @@ updateColumn (Nothing:ys) player = Just player : ys
 updateColumn (y:ys) player = y : updateColumn ys player       
         
 
-
-
 -- Tell you all the moves that can be made from the current gamestate, [0..6].
 legalMoves :: Board -> [Move]
-legalMoves (xs:_) = 
-  let aux [] _ = []
-      aux (x:xs) col 
-        | isNothing x = col : aux xs (col + 1)
-        | otherwise = aux xs (col + 1)
-  in aux xs 0 
-
+legalMoves (xs:_) = [col | (col, cell) <- zip [0..6] xs, isNothing cell] 
+  
  
-showRow :: Row -> String 
-showRow = undefined
+showRow :: Row -> String
+showRow row = unwords (map cellToString row)
+  where
+    cellToString (Just Red)    = "R"
+    cellToString (Just Yellow) = "Y"
+    cellToString Nothing       = "E"
 
--- Print the game state, should be in 2d list form. can represent players with X's and O's.
-printGame :: Board -> String 
-printGame = undefined 
+printGame :: Board -> String
+printGame board = unlines (map showRow board)
