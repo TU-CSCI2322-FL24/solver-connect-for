@@ -1,1 +1,3 @@
-import Connect 
+module Solver where
+import Connect
+
