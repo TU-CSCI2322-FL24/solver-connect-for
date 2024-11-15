@@ -30,7 +30,10 @@ findRow (xs:xss, player) col = aux (xs:xss) col 1
         (Just p : _) | p == player -> boardLength - rowIndex  
         _                          -> aux xss col (rowIndex + 1)
 
-
+switchPlayer :: Player -> Player 
+switchPlayer player 
+  | player == Red = Yellow 
+  | otherwise = Red 
 
 -- Takes the gamestate and the most recent move and checks if that player has won the game.
 checkWin :: GameState -> Outcome
@@ -63,7 +66,7 @@ checkDiagonal (board, player) = any (checkRowForWin player) (convertDiagsToRows 
                                 any (checkRowForWin player) (convertDiagsToRows (map reverse board))
 
 convertDiagsToRows :: Board -> [Row]
-convertDiagsToRows board = [convertDiagToRow board col | col <- [0..(length (head board) - 1)]]
+convertDiagsToRows board = [convertDiagToRow (drop row board) col | row <- [0..length board - 1], col <- [0..(length (head board) - 1)]]
 
 convertDiagToRow :: Board -> Int -> Row
 convertDiagToRow [] _ = [] 
@@ -100,6 +103,9 @@ legalMoves (xs:_) =
         | otherwise = aux xs (col + 1)
   in aux xs 0 
 
+ 
+showRow :: Row -> String 
+showRow = undefined
 
 -- Print the game state, should be in 2d list form. can represent players with X's and O's.
 printGame :: Board -> String 
