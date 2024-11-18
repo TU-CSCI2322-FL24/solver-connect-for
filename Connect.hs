@@ -37,10 +37,12 @@ switchPlayer player
 
 -- Takes the gamestate and the most recent move and checks if that player has won the game.
 checkWin :: GameState -> Maybe Winner
-checkWin (board, player) 
-    | any (\f -> f (board, player)) [checkHorizontal, checkVertical, checkDiagonal] = Just (Winner player)
+checkWin (board, _) 
+    | any (\f -> f (board, Red)) [checkHorizontal, checkVertical, checkDiagonal] = Just (Winner Red)
+    | any (\f -> f (board, Yellow)) [checkHorizontal, checkVertical, checkDiagonal] = Just (Winner Yellow)
     | checkDraw board = Just Draw
     | otherwise = Nothing
+  
 
 checkRowForWin :: Player -> Row -> Bool
 checkRowForWin player (x:xs)
