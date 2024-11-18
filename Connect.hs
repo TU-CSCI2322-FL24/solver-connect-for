@@ -15,7 +15,7 @@ type GameState = (Board, Player)
 
 type Move = Int
 
-data Outcome = Ongoing | Draw | Winner Player deriving (Eq, Show)
+data Winner = Draw | Winner Player deriving (Eq, Show)
 
 
 -- Given a GameState, it will use the previous move to find the row in which it landed.
@@ -36,11 +36,11 @@ switchPlayer player
   | otherwise = Red 
 
 -- Takes the gamestate and the most recent move and checks if that player has won the game.
-checkWin :: GameState -> Outcome
+checkWin :: GameState -> Maybe Winner
 checkWin (board, player) 
-    | any (\f -> f (board, player)) [checkHorizontal, checkVertical, checkDiagonal] = Winner player
-    | checkDraw board = Draw
-    | otherwise = Ongoing
+    | any (\f -> f (board, player)) [checkHorizontal, checkVertical, checkDiagonal] = Just (Winner player)
+    | checkDraw board = Just Draw
+    | otherwise = Nothing
 
 checkRowForWin :: Player -> Row -> Bool
 checkRowForWin player (x:xs)
