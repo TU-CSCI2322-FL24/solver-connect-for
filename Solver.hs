@@ -38,6 +38,33 @@ bestMove (board, player) =
         Nothing -> case drawMove of 
             Just move -> move 
             Nothing -> snd (head results)
+
+
+readGame :: String -> GameState 
+readGame input =
+    let 
+        (status:xs) = lines input 
+        currentPlayer = if drop 6 status == "Red" then Red else Yellow 
+        board = map parseRow xs 
+
+    in (board, currentPlayer)
+
+parseRow :: String -> Row 
+parseRow row = map parseCell (words row)
+
+parseCell :: String -> Cell 
+parseCell "R" = Just Red 
+parseCell "Y" = Just Yellow
+parseCell _ = Nothing 
+
+
+showGame :: GameState -> String 
+showGame (board, player) = 
+    let 
+        playerTurn = "Turn: " ++ (if player == Red then "Red" else "Yellow")
+        boardStr = unlines $ map showRow board
+    in 
+        playerTurn ++ "\n" ++ boardStr
        
 
 
