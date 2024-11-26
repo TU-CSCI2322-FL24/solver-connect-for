@@ -102,10 +102,11 @@ legalMoves (xs:_) = [col | (col, cell) <- zip [0..6] xs, isNothing cell]
  
 showRow :: Row -> String
 showRow row = unwords (map cellToString row)
-  where
-    cellToString (Just Red)    = "(R)"
-    cellToString (Just Yellow) = "(Y)"
-    cellToString Nothing       = "( )"
+
+cellToString :: Cell -> String
+cellToString (Just Red) = "R"
+cellToString (Just Yellow) = "Y"
+cellToString Nothing = "0"
 
 printGame :: Board -> String
 printGame board = unlines (map showRow board)
