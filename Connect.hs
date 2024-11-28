@@ -4,17 +4,11 @@ import Data.Maybe
 import Data.List
 
 data Player = Red | Yellow deriving (Eq, Ord, Show)
-
 type Cell = Maybe Player  
-
 type Row = [Cell]
-
 type Board = [Row]
-
 type GameState = (Board, Player)
-
 type Move = Int
-
 data Winner = Draw | Winner Player deriving (Eq, Show)
 
 
@@ -74,13 +68,13 @@ makeMove:: GameState -> Move -> GameState
 makeMove (board, player) move = 
   let rotatedBoard = transpose board 
       (before, (column:after)) = splitAt move rotatedBoard
-      newColumn = reverse $ updateColumn (reverse column) player
+      newColumn = tail $ updateColumn column player
   in (transpose (before ++ (newColumn : after)), player)
 
 updateColumn :: Row -> Player -> Row
-updateColumn [] _ = [] 
-updateColumn (Nothing:ys) player = Just player : ys
-updateColumn (y:ys) player = y : updateColumn ys player
+updateColumn [] player = [Just player] 
+updateColumn (Just x:ys) player = Just player : Just x : ys
+updateColumn (Nothing:ys) player = Nothing : updateColumn ys player
 
 
 -- Tell you all the moves that can be made from the current gamestate, [0..6].

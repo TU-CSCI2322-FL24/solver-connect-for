@@ -25,7 +25,7 @@ putBestMove (board, player) = do
     let
         move = bestMove (board, player) 
         (boardWithMove, newPlayer) = makeMove (board, player) move
-        outcome = whoWillWin (boardWithMove, newPlayer) 
+        outcome = whoWillWin (boardWithMove, switchPlayer player) 
     putStrLn $ "Best move: " ++ show move 
     putStrLn $ "Outcome: " ++ show outcome  
 
