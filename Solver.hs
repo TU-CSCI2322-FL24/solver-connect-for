@@ -60,11 +60,7 @@ parseCell _ = Nothing
 
 showGame :: GameState -> String 
 showGame (board, player) = 
-    let 
-        playerTurn = "Turn: " ++ (if player == Red then "Red" else "Yellow")
-        boardStr = unlines $ map showRow board
-    in 
-        playerTurn ++ "\n" ++ boardStr
+        "Turn: " ++ (if player == Red then "Red" else "Yellow") ++ "\n" ++ printGame board
        
 
 

@@ -1,5 +1,5 @@
 module Connect where 
-
+import Debug.Trace
 import Data.Maybe
 import Data.List
 
@@ -17,18 +17,6 @@ type Move = Int
 
 data Winner = Draw | Winner Player deriving (Eq, Show)
 
-
--- Given a GameState, it will use the previous move to find the row in which it landed.
-findRow :: GameState -> Int -> Int
-findRow (xs:xss, player) col = aux (xs:xss) col 1
-  where
-    boardWidth = length xs 
-    boardLength = length (xs:xss)
-    aux [] _ _ = -1  
-    aux (xs:xss) col rowIndex =
-      case drop col xs of
-        (Just p : _) | p == player -> boardLength - rowIndex  
-        _                          -> aux xss col (rowIndex + 1)
 
 switchPlayer :: Player -> Player 
 switchPlayer player 
@@ -91,9 +79,9 @@ makeMove (board, player) move =
 
 updateColumn :: Row -> Player -> Row
 updateColumn [] _ = [] 
-updateColumn (Nothing:ys) player = Just player : ys    
-updateColumn (y:ys) player = y : updateColumn ys player       
-        
+updateColumn (Nothing:ys) player = Just player : ys
+updateColumn (y:ys) player = y : updateColumn ys player
+
 
 -- Tell you all the moves that can be made from the current gamestate, [0..6].
 legalMoves :: Board -> [Move]
