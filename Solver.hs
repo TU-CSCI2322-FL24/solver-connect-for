@@ -22,20 +22,19 @@ bestOutcome player results
     | Draw `elem` results = Draw 
     | otherwise = Winner $ switchPlayer player
 
-
--- This will fail if given a full board. Should return Maybe Move to deal with this.
+-- returns -1 when board is full because using maybes would make putBestMove more complex then it needs to be.
 bestMove :: GameState -> Move
-bestMove (board, player) = 
-    let 
-        moves = legalMoves board
-        outcomes = map (makeMove (board, player)) moves `zip` moves 
-        results = [(whoWillWin (resBoard, switchPlayer player), move) | ((resBoard, _), move) <- outcomes]
-        winningMove = lookup (Winner player) results 
-        drawMove = lookup Draw results
-
-    in case winningMove of 
-        Just move -> move 
-        Nothing -> case drawMove of 
+bestMove (board, player) 
+    | checkDraw board = -1 
+    | otherwise =
+        let 
+            moves = legalMoves board
+            outcomes = map (makeMove (board, player)) moves `zip` moves 
+            results = [(whoWillWin (resBoard, switchPlayer player), move) | ((resBoard, _), move) <- outcomes]
+            winningMove = lookup (Winner player) results 
+            drawMove = lookup Draw results
+            bestMoveCanidate = if isJust winningMove then winningMove else drawMove
+        in case bestMoveCanidate of 
             Just move -> move 
             Nothing -> snd (head results)
 
@@ -56,7 +55,6 @@ parseCell :: String -> Cell
 parseCell "R" = Just Red 
 parseCell "Y" = Just Yellow
 parseCell _ = Nothing 
-
 
 showGame :: GameState -> String 
 showGame (board, player) = 
