@@ -1,3 +1,5 @@
+module TestInputs where
+
 import Connect
 import Solver
 

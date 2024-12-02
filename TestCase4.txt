@@ -1,0 +1,7 @@
+Turn: Yellow
+R Y R Y R Y R
+0 0 Y R 0 0 0
+0 Y R R 0 0 0
+Y 0 0 0 0 0 0
+0 0 0 0 0 0 0
+0 0 0 0 0 0 0
