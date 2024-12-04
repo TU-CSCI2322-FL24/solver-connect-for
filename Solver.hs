@@ -2,6 +2,8 @@ module Solver where
 import Connect
 import Data.Maybe
 
+type Rating = Integer
+
 whoWillWin :: GameState -> Winner 
 whoWillWin (board, player) = 
     case checkWin (board, player) of -- base case, if someone has won or there is a draw, recursion should stop. 
@@ -38,6 +40,26 @@ bestMove (board, player)
             Just move -> move 
             Nothing -> snd (head results)
 
+-- Should focus on the GameState, dont look into the future. 
+rateGame :: GameState -> Rating 
+rateGame (board, player) 
+    | possibleWinner == Just (Winner Yellow) = 20000
+    | possibleWinner == Just (Winner Red) = -20000
+    | possibleWinner == Just Draw = 0
+    | otherwise = 12 
+    where possibleWinner = checkWin (board, player)
+
+countNHori :: Board -> Int 
+countNHori = undefined 
+
+countNVerti :: Board -> Int
+countNVerti = undefined 
+
+countNDiag :: Board -> Int
+countNDiag = undefined 
+
+getScore :: GameState -> Int
+getScore = undefined
 
 readGame :: String -> GameState 
 readGame input =
