@@ -122,7 +122,7 @@ maximize best depth (x:xs)
 minimize:: Rating -> Int -> [GameState] -> Rating 
 minimize best _ [] = best
 minimize best depth (x:xs)
-    | best == 20000 = 20000
+    | best == -20000 = -20000
     | otherwise = minimize (min best (minimax (depth - 1) True x)) depth xs
 
 getBestScore :: Player -> [(Rating, Move)] -> (Rating, Move)
