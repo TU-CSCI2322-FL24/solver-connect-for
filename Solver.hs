@@ -1,12 +1,16 @@
 module Solver where
 import Connect
 import Data.Maybe
+import Data.List
 
-type Rating = Integer
+type Rating = Int
+
+
+--------------------------------- bestMove ------------------------------------------------
 
 whoWillWin :: GameState -> Winner 
 whoWillWin (board, player) = 
-    case checkWin (board, player) of -- base case, if someone has won or there is a draw, recursion should stop. 
+    case checkWin (board, player) of 
         Just result -> result 
         Nothing -> 
             let 
@@ -16,7 +20,6 @@ whoWillWin (board, player) =
             in bestOutcome player results 
     where 
         evaluateOutcomes (resBoard, _) = whoWillWin (resBoard, switchPlayer player) 
- 
 
 bestOutcome :: Player -> [Winner] -> Winner 
 bestOutcome player results 
@@ -24,7 +27,6 @@ bestOutcome player results
     | Draw `elem` results = Draw 
     | otherwise = Winner $ switchPlayer player
 
--- returns -1 when board is full because using maybes would make putBestMove more complex then it needs to be.
 bestMove :: GameState -> Move
 bestMove (board, player) 
     | checkDraw board = -1 
@@ -40,26 +42,99 @@ bestMove (board, player)
             Just move -> move 
             Nothing -> snd (head results)
 
--- Should focus on the GameState, dont look into the future. 
+
+--------------------------------- rateGame ------------------------------------------------
+
 rateGame :: GameState -> Rating 
 rateGame (board, player) 
     | possibleWinner == Just (Winner Yellow) = 20000
     | possibleWinner == Just (Winner Red) = -20000
-    | possibleWinner == Just Draw = 0
-    | otherwise = 12 
+    | possibleWinner == Just Draw = 40000
+    | otherwise = scoreDirections board (Just Yellow) - scoreDirections board (Just Red) 
     where possibleWinner = checkWin (board, player)
 
-countNHori :: Board -> Int 
-countNHori = undefined 
+-- get the total score for all possible directions
+scoreDirections :: Board -> Maybe Player -> Int 
+scoreDirections board player = 
+    scoreDirection board player + 
+    scoreDirection (transpose board) player + 
+    scoreDirection (convertDiagsToRows board) player + 
+    scoreDirection (convertDiagsToRows (map reverse board)) player
 
-countNVerti :: Board -> Int
-countNVerti = undefined 
+scoreDirection :: Board -> Maybe Player -> Int 
+scoreDirection board player = 
+    let opponent = if player == Just Red then Just Yellow else Just Red
+        listOf4 = concatMap getSublists board
+        withoutOpponent = filter (notElem opponent) listOf4 
+    in playerCount withoutOpponent
 
-countNDiag :: Board -> Int
-countNDiag = undefined 
+playerCount :: [Row] -> Int 
+playerCount board = 
+    let 
+        onlyPlayer = map (filter isJust) board
+        scoreEachList = map length onlyPlayer 
+        totals = map score scoreEachList
+    in sum totals
 
-getScore :: GameState -> Int
-getScore = undefined
+score :: Int -> Int 
+score n
+    | n == 0 = 0 
+    | n == 1 = 0 
+    | n == 2 = 2 
+    | otherwise = 3
+
+getSublists ::  Row -> [Row]
+getSublists (x:xs) 
+    | length (x:xs) < 4 = []
+    | otherwise = take 4 (x:xs) : getSublists xs  
+
+
+--------------------------------- minimax ------------------------------------------------
+
+whoMightWin :: GameState -> Int -> (Rating, Move)
+whoMightWin (board, player) depth 
+    | isEndState currentRating = (currentRating, -1)
+    | otherwise =  getBestScore player scoresWithMoves
+    where 
+        currentRating = rateGame (board, player)
+        moves = legalMoves board 
+        outcomes = map (makeMove (board, player)) moves 
+        scores = map (minimax (depth - 1) (player /= Yellow)) outcomes
+        scoresWithMoves = zip scores moves
+
+minimax :: Int -> Bool ->  GameState -> Rating 
+minimax depth maximizing (board, prevPlayer) 
+    | depth == 0 || isEndState currentRating = currentRating
+    | maximizing = maximize (-21000) depth outcomes
+    | otherwise = minimize 21000 depth outcomes
+    where
+        currentPlayer = switchPlayer prevPlayer
+        currentRating = rateGame (board, prevPlayer)
+        moves = legalMoves board 
+        outcomes = map (makeMove (board, currentPlayer)) moves 
+
+maximize :: Rating -> Int -> [GameState] -> Rating 
+maximize best _ [] = best
+maximize best depth (x:xs)
+    | best == 20000 = 20000
+    | otherwise = maximize (max best (minimax (depth - 1) False x)) depth xs
+
+minimize:: Rating -> Int -> [GameState] -> Rating 
+minimize best _ [] = best
+minimize best depth (x:xs)
+    | best == 20000 = 20000
+    | otherwise = minimize (min best (minimax (depth - 1) True x)) depth xs
+
+getBestScore :: Player -> [(Rating, Move)] -> (Rating, Move)
+getBestScore player scores 
+    | player == Red = minimumBy (\(score1, _) (score2,_) -> compare score1 score2) scores
+    | otherwise     = maximumBy (\(score1, _) (score2, _) -> compare score1 score2) scores
+
+isEndState :: Rating -> Bool
+isEndState rate = rate `elem` [40000, 20000, -20000] 
+
+
+--------------------------------- parsing ------------------------------------------------
 
 readGame :: String -> GameState 
 readGame input =
