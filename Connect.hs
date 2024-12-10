@@ -20,11 +20,9 @@ switchPlayer player
 legalMoves :: Board -> [Move]
 legalMoves (xs:_) = [col | (col, cell) <- zip [0..6] xs, isNothing cell]
 
-
   
 --------------------------------- checkWin ------------------------------------------------
 
--- Takes the gamestate and the most recent move and checks if that player has won the game.
 checkWin :: GameState -> Maybe Winner
 checkWin (board, _) 
     | any (\f -> f (board, Red)) [checkHorizontal, checkVertical, checkDiagonal] = Just (Winner Red)
@@ -32,13 +30,11 @@ checkWin (board, _)
     | checkDraw board = Just Draw
     | otherwise = Nothing
   
-
 checkRowForWin :: Player -> Row -> Bool
 checkRowForWin player (x:xs)
     | length (x:xs) < 4 = False  
     | take 4 (x:xs) == replicate 4 (Just player) = True  
     | otherwise = checkRowForWin player xs 
-
 
 checkHorizontal :: GameState -> Bool
 checkHorizontal ([],_) = False 
@@ -51,15 +47,16 @@ checkVertical (board, player) = any (checkRowForWin player) rotatedBoard
   where
     rotatedBoard = transpose board
 
--- reversing the board will get anti diagonals.
 checkDiagonal :: GameState -> Bool 
 checkDiagonal (board, player) = any (checkRowForWin player) (convertDiagsToRows board) || 
                                 any (checkRowForWin player) (convertDiagsToRows (map reverse board))
 
--- Very inefficient as it finds all possible diagonals, but good for now.
 convertDiagsToRows :: Board -> [Row]
-convertDiagsToRows board = [convertDiagToRow (drop row board) col | row <- [0..length board - 1], col <- [0..(length (head board) - 1)]]
-
+convertDiagsToRows board = 
+  let 
+    converted = [convertDiagToRow (drop row board) col | row <- [0..length board - 1], col <- [0..(length (head board) - 1)]]
+  in filter (\x -> length x == 4) converted 
+  
 convertDiagToRow :: Board -> Int -> Row
 convertDiagToRow [] _ = [] 
 convertDiagToRow (xs : xss) col 
@@ -70,22 +67,19 @@ checkDraw :: Board -> Bool
 checkDraw (xs:xss) = all isJust xs
 
 
-
 --------------------------------- makeMove ------------------------------------------------
 
--- Takes the gamestate, Player and the move and adds it to the board.
 makeMove:: GameState -> Move -> GameState
 makeMove (board, player) move = 
   let rotatedBoard = transpose board 
       (before, (column:after)) = splitAt move rotatedBoard
-      newColumn = tail $ updateColumn column player -- use tail because 'updateColumn' adds a extra row, so get rid of overhead.
+      newColumn = tail $ updateColumn column player 
   in (transpose (before ++ (newColumn : after)), player)
 
 updateColumn :: Row -> Player -> Row
 updateColumn [] player = [Just player] 
 updateColumn (Just x:ys) player = Just player : Just x : ys
 updateColumn (Nothing:ys) player = Nothing : updateColumn ys player
-
 
 
 --------------------------------- printGame -----------------------------------------------
