@@ -47,11 +47,11 @@ bestMove (board, player)
 
 rateGame :: GameState -> Rating 
 rateGame (board, player) 
-    | possibleWinner == Just (Winner Yellow) = 20000
-    | possibleWinner == Just (Winner Red) = -20000
-    | possibleWinner == Just Draw = 40000
+    | intialScore == Just (Winner Yellow) = 20000
+    | intialScore == Just (Winner Red) = -20000
+    | intialScore == Just Draw = 40000
     | otherwise = scoreDirections board (Just Yellow) - scoreDirections board (Just Red) 
-    where possibleWinner = checkWin (board, player)
+    where intialScore = checkWin (board, player)
 
 -- get the total score for all possible directions
 scoreDirections :: Board -> Maybe Player -> Int 
