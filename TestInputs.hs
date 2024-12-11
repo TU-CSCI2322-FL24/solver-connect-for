@@ -93,3 +93,23 @@ whoWWYHori =
                 [ Nothing,     Nothing,     Nothing,     Nothing,         Nothing,      Nothing,      Nothing],
                 [ Nothing,     Nothing,     Nothing,     Nothing,         Nothing,      Nothing,      Nothing]
         ]
+
+testRateGame = 
+        [
+                [ Just Red,    Just Red,    Just Red,    Nothing,         Nothing,      Nothing,  Nothing],
+                [ Nothing,     Nothing,     Nothing,     Nothing,         Nothing,      Nothing,      Nothing],
+                [ Just Yellow,     Nothing,     Nothing,     Nothing,     Nothing,     Nothing,      Nothing],
+                [ Nothing,     Just Yellow,     Nothing,     Nothing,         Nothing,      Nothing,      Nothing],
+                [ Nothing,     Nothing,     Just Yellow,     Nothing,         Nothing,      Nothing,      Nothing],
+                [ Nothing,     Nothing,     Nothing,     Just Yellow,         Nothing,      Nothing,      Nothing]
+        ]
+
+whoMW = 
+        [
+                [ Nothing,     Nothing,    Nothing,     Nothing,         Nothing,      Nothing,       Nothing],
+                [ Nothing,     Nothing,     Nothing,     Nothing,         Nothing,      Nothing,      Nothing],
+                [ Nothing,     Nothing,     Nothing,     Nothing,         Nothing,      Nothing,      Nothing],
+                [ Nothing,     Nothing,     Nothing,     Nothing,         Nothing,      Nothing,      Nothing],
+                [ Just Red,     Nothing,     Nothing,     Nothing,         Nothing,     Nothing,      Just Yellow],
+                [ Just Red,     Nothing,   Nothing,       Nothing,     Nothing,      Nothing,      Just Yellow]
+        ]
